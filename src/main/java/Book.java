@@ -6,6 +6,7 @@ public class Book {
   private int id;
   private String title;
   private boolean checked_in;
+  private int author_id;
 
   public Book(String title) {
     this.title = title;
@@ -66,20 +67,41 @@ public class Book {
   public static Book find(int id) {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM books WHERE id=:id";
-      Book task = con.createQuery(sql)
+      Book book = con.createQuery(sql)
         .addParameter("id", id)
         .executeAndFetchFirst(Book.class);
-      return task;
+      return book;
+    }
+  }
+
+  public static List<Book> findByTitle(String title) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM books WHERE title=:title";
+      List<Book> books = con.createQuery(sql)
+        .addParameter("title", title)
+        .executeAndFetch(Book.class);
+      return books;
+    }
+  }
+
+  public static List<Book> findByAuthor(Author author) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT books.* FROM authors JOIN books_authors ON (authors.id = books_authors.author_id) JOIN books ON (books_authors.book_id = books.id) WHERE authors.id = :author_id";
+      List<Book> books = con.createQuery(sql)
+        .addParameter("author_id", author.getId())
+        .executeAndFetch(Book.class);
+      return books;
     }
   }
 
   public void addAuthor(Author author) {
     try (Connection con = DB.sql2o.open()) {
       String sql = "INSERT INTO books_authors (author_id, book_id) VALUES (:author_id, :book_id);";
-      con.createQuery(sql)
+      con.createQuery(sql, true)
         .addParameter("author_id", author.getId())
         .addParameter("book_id", this.getId())
-        .executeUpdate();
+        .executeUpdate()
+        .getKey();
     }
   }
 
@@ -94,8 +116,8 @@ public class Book {
       List<Author> authors = new ArrayList<Author>();
 
       for (Integer authorId : authorIds) {
-        String taskQuery = "SELECT * FROM authors WHERE id = :authorId;";
-        Author author = con.createQuery(taskQuery)
+        String bookQuery = "SELECT * FROM authors WHERE id = :authorId;";
+        Author author = con.createQuery(bookQuery)
           .addParameter("authorId", authorId)
           .executeAndFetchFirst(Author.class);
         authors.add(author);
@@ -111,9 +133,9 @@ public class Book {
           .addParameter("id", this.getId())
           .executeUpdate();
 
-      String joinDeleteQuery = "DELETE FROM books_authors WHERE book_id = :taskId;";
+      String joinDeleteQuery = "DELETE FROM books_authors WHERE book_id = :bookId;";
         con.createQuery(joinDeleteQuery)
-          .addParameter("taskId", this.getId())
+          .addParameter("bookId", this.getId())
           .executeUpdate();
     }
   }

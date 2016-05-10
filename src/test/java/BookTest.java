@@ -99,4 +99,34 @@ public class BookTest {
     myBook.checkout();
     assertFalse(myBook.getAvailability());
   }
+
+  @Test
+  public void findByTitle_returnsABookByTitle_true() {
+    Book myBook = new Book("Snow Crash");
+    myBook.save();
+    myBook.save();
+    assertEquals(Book.findByTitle("Snow Crash").get(1), myBook);
+  }
+  @Test
+  public void findByTitle_returnsABookByTitleAndNothingElse_true() {
+    Book myBook = new Book("Snow Crash");
+    myBook.save();
+    Book yourBook = new Book("Goodnight Moon");
+    yourBook.save();
+    assertEquals(Book.findByTitle("Goodnight Moon").get(0), yourBook);
+  }
+  @Test
+  public void findByAuthor_returnsABookByAuthorAndNothingElse_true() {
+    Book myBook = new Book("Snow Crash");
+    myBook.save();
+    Author myAuthor = new Author("Neal Stephenson");
+    myAuthor.save();
+    myBook.addAuthor(myAuthor);
+    Book yourBook = new Book("Goodnight Moon");
+    yourBook.save();
+    Author yourAuthor = new Author("Shakespeare");
+    yourAuthor.save();
+    yourBook.addAuthor(yourAuthor);
+    assertEquals(Book.findByAuthor(yourAuthor).get(0), yourBook);
+  }
 }

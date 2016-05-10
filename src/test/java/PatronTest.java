@@ -39,6 +39,6 @@ public class PatronTest {
     Book myBook = new Book("Mow the lawn for Dummies");
     myBook.save();
     myPatron.checkout(myBook.getTitle());
-    assertEquals("Sorry", myPatron.checkout(myBook.getTitle()));
+    assertEquals("Sorry, no copies were available", myPatron.checkout(myBook.getTitle()));
   }
 }
