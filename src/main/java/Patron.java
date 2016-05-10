@@ -38,6 +38,16 @@ public class Patron {
     }
   }
 
+  public List<Book> getHistory() {
+    try(Connection con = DB.sql2o.open()) {
+      String joinQuery = "SELECT books.* FROM patrons JOIN checkouts ON (patrons.id = checkouts.patron_id) JOIN books ON (checkouts.book_id = books.id) WHERE patrons.id = :patron_id;";
+      List<Book> books = con.createQuery(joinQuery)
+        .addParameter("patron_id", this.id)
+        .executeAndFetch(Book.class);
+      return books;
+    }
+  }
+
   public String checkout(String title) {
     List<Book> books = new ArrayList();
     try (Connection con = DB.sql2o.open()) {
