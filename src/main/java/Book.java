@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import org.sql2o.*;
+import java.util.Date;
 
 public class Book {
   private int id;
@@ -17,13 +18,32 @@ public class Book {
     return checked_in;
   }
 
-  public void checkout() {
+  public void checkout(Patron patron) {
     this.checked_in = false;
     try (Connection con = DB.sql2o.open()) {
       String sql = "UPDATE books SET checked_in = false WHERE id = :id";
       con.createQuery(sql)
       .addParameter("id", this.id)
       .executeUpdate();
+
+      String checkoutsSql = "INSERT INTO checkouts (patron_id, book_id, due_date) VALUES (:patron_id, :book_id, :due_date);";
+      Date dueDate = new Date();
+      dueDate.setMonth(dueDate.getMonth() + 1);
+      con.createQuery(checkoutsSql)
+      .addParameter("patron_id", patron.getId())
+      .addParameter("book_id", this.id)
+      .addParameter("due_date", dueDate)
+      .executeUpdate();
+    }
+  }
+
+  public Date getDueDate() {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "SELECT checkouts.due_date FROM books JOIN checkouts ON (checkouts.book_id = books.id) WHERE books.id = :book_id;";
+      Date dueDate = con.createQuery(sql)
+      .addParameter("book_id", this.id)
+      .executeAndFetchFirst(Date.class);
+      return dueDate;
     }
   }
 

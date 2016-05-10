@@ -50,12 +50,10 @@ public class Patron {
     boolean available = false;
 
     for (Book book : books) {
-      System.out.println("book in loop id " + book.getId());
-      System.out.println("available " + book.getAvailability());
       boolean book_available = book.getAvailability();
       if (book_available == true) {
         available = true;
-        book.checkout();
+        book.checkout(this);
         break;
       }
     }
@@ -65,7 +63,6 @@ public class Patron {
       return "Sorry, no copies were available";
     }
   }
-
 
   @Override
   public boolean equals(Object otherPatron) {

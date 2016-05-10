@@ -3,6 +3,8 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class BookTest {
 
@@ -94,9 +96,11 @@ public class BookTest {
 
   @Test
   public void checkout_setsAvailablilityToFalse_true() {
+    Patron newPatron = new Patron("Kyle");
+    newPatron.save();
     Book myBook = new Book("Snow Crash");
     myBook.save();
-    myBook.checkout();
+    myBook.checkout(newPatron);
     assertFalse(myBook.getAvailability());
   }
 
@@ -162,5 +166,16 @@ public class BookTest {
     newPatron.checkout("Snow Crash");
     assertEquals(3, Book.countByTitle("Snow Crash"));
   }
-
+  @Test
+  public void getDueDate_returnsDueDateAfterCheckout() {
+    Date dueDate = new Date();
+    dueDate.setMonth(dueDate.getMonth() + 1);
+    Book myBook = new Book("Snow Crash");
+    myBook.save();
+    Patron newPatron = new Patron("Kyle");
+    newPatron.save();
+    newPatron.checkout("Snow Crash");
+    Book savedBook = Book.find(myBook.getId());
+    assertEquals(myBook.getDueDate(), savedBook.getDueDate());
+  }
 }

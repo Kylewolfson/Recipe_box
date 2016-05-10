@@ -41,4 +41,14 @@ public class PatronTest {
     myPatron.checkout(myBook.getTitle());
     assertEquals("Sorry, no copies were available", myPatron.checkout(myBook.getTitle()));
   }
+
+  // @Test
+  // public void Checkout_logsCheckoutByPatronInCheckoutsTable() {
+  //   Patron myPatron = new Patron("Book lover");
+  //   myPatron.save();
+  //   Book myBook = new Book("Mow the lawn for Dummies");
+  //   myBook.save();
+  //   myPatron.checkout(myBook.getTitle());
+  //   assertEqual()
+  // }
 }
