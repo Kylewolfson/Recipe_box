@@ -5,9 +5,25 @@ import org.sql2o.*;
 public class Book {
   private int id;
   private String title;
+  private boolean checked_in;
 
   public Book(String title) {
     this.title = title;
+    this.checked_in = true;
+  }
+
+  public boolean getAvailability() {
+    return checked_in;
+  }
+
+  public void checkout() {
+    this.checked_in = false;
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE books SET checked_in = false WHERE id = :id";
+      con.createQuery(sql)
+      .addParameter("id", this.id)
+      .executeUpdate();
+    }
   }
 
   public String getTitle() {
@@ -19,7 +35,7 @@ public class Book {
   }
 
   public static List<Book> all() {
-    String sql = "SELECT id, title FROM books";
+    String sql = "SELECT * FROM books";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql).executeAndFetch(Book.class);
     }
@@ -38,9 +54,10 @@ public class Book {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO books (title) VALUES (:title)";
+      String sql = "INSERT INTO books (title, checked_in) VALUES (:title, :checked_in)";
       this.id = (int) con.createQuery(sql, true)
       .addParameter("title", this.title)
+      .addParameter("checked_in", this.checked_in)
       .executeUpdate()
       .getKey();
     }

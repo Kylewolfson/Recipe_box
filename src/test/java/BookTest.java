@@ -71,11 +71,14 @@ public class BookTest {
   public void getAuthors_returnsAllAuthors_List() {
     Author myAuthor = new Author("Neal Stephenson");
     myAuthor.save();
+    Author yourAuthor = new Author("Stephen King");
+    myAuthor.save();
     Book myBook = new Book("Snow Crash");
     myBook.save();
     myBook.addAuthor(myAuthor);
+    myBook.addAuthor(yourAuthor);
     List savedAuthors = myBook.getAuthors();
-    assertEquals(1, savedAuthors.size());
+    assertEquals(2, savedAuthors.size());
   }
 
   @Test
@@ -87,5 +90,13 @@ public class BookTest {
     myBook.addAuthor(myAuthor);
     myBook.delete();
     assertEquals(0, myAuthor.getBooks().size());
+  }
+
+  @Test
+  public void checkout_setsAvailablilityToFalse_true() {
+    Book myBook = new Book("Snow Crash");
+    myBook.save();
+    myBook.checkout();
+    assertFalse(myBook.getAvailability());
   }
 }
