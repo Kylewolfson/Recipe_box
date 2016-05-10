@@ -84,6 +84,22 @@ public class Book {
     }
   }
 
+  public static int countByTitle(String title) {
+    try(Connection con = DB.sql2o.open()) {
+      int bookCount = 0;
+      String sql = "SELECT * FROM books WHERE title = :title";
+      List<Book> books = con.createQuery(sql)
+        .addParameter("title", title)
+        .executeAndFetch(Book.class);
+      for (Book book : books ) {
+        if (book.getAvailability() == true) {
+          bookCount ++;
+        }
+      }
+      return bookCount;
+    }
+  }
+
   public static List<Book> findByAuthor(Author author) {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT books.* FROM authors JOIN books_authors ON (authors.id = books_authors.author_id) JOIN books ON (books_authors.book_id = books.id) WHERE authors.id = :author_id";

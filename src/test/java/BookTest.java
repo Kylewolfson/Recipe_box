@@ -129,4 +129,38 @@ public class BookTest {
     yourBook.addAuthor(yourAuthor);
     assertEquals(Book.findByAuthor(yourAuthor).get(0), yourBook);
   }
+  @Test
+  public void findByAuthor_returnsABookByAuthorWithMultipleAuthors() {
+    Book myBook = new Book("Snow Crash");
+    myBook.save();
+    Author myAuthor = new Author("Neal Stephenson");
+    myAuthor.save();
+    myBook.addAuthor(myAuthor);
+    Author yourAuthor = new Author("Shakespeare");
+    yourAuthor.save();
+    myBook.addAuthor(yourAuthor);
+    assertEquals(Book.findByAuthor(myAuthor).get(0), myBook);
+  }
+  @Test
+  public void countByTitle_returnsCountofBooksWithTitle_4() {
+    Book myBook = new Book("Snow Crash");
+    myBook.save();
+    myBook.save();
+    myBook.save();
+    myBook.save();
+    assertEquals(4, Book.countByTitle("Snow Crash"));
+  }
+  @Test
+  public void countByTitle_returnsCountofBooksWithTitleAfterCheckout_3() {
+    Book myBook = new Book("Snow Crash");
+    myBook.save();
+    myBook.save();
+    myBook.save();
+    myBook.save();
+    Patron newPatron = new Patron("Kyle");
+    newPatron.save();
+    newPatron.checkout("Snow Crash");
+    assertEquals(3, Book.countByTitle("Snow Crash"));
+  }
+
 }
