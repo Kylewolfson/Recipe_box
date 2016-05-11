@@ -14,6 +14,13 @@ public class Ingredient {
     return fixins;
   }
 
+  public static List<Ingredient> all() {
+    String sql = "SELECT * FROM ingredients";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql).executeAndFetch(Ingredient.class);
+    }
+  }
+
   public int getId() {
     return id;
   }

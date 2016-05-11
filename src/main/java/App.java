@@ -37,20 +37,38 @@ public class App {
       Map<String, Object> model = new HashMap<String, Object>();
       Recipe recipe = Recipe.find(Integer.parseInt(request.params("id")));
       model.put("recipe", recipe);
-      model.put("allTags", Tag.all());
       model.put("template", "templates/recipe.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
-    // post("/add_categories", (request, response) -> {
-    //   int taskId = Integer.parseInt(request.queryParams("task_id"));
-    //   int categoryId = Integer.parseInt(request.queryParams("category_id"));
-    //   Category category = Category.find(categoryId);
-    //   Task task = Task.find(taskId);
-    //   task.addCategory(category);
-    //   response.redirect("/tasks/" + taskId);
-    //   return null;
-    // });
+    get("/recipes/:id/edit", (request,response) ->{
+      Map<String, Object> model = new HashMap<String, Object>();
+      Recipe recipe = Recipe.find(Integer.parseInt(request.params("id")));
+      model.put("recipe", recipe);
+      model.put("allTags", Tag.all());
+      model.put("allIngredients", Ingredient.all());
+      model.put("template", "templates/recipe-edit.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/add_tags", (request, response) -> {
+      int recipeId = Integer.parseInt(request.queryParams("recipe_id"));
+      int tagId = Integer.parseInt(request.queryParams("tag_id"));
+      Tag tag = Tag.find(tagId);
+      Recipe recipe = Recipe.find(recipeId);
+      recipe.addTag(tag);
+      response.redirect("/recipes/" + recipeId + "/edit");
+      return null;
+    });
+
+    post("/edit_instructions", (request, response) -> {
+      int recipeId = Integer.parseInt(request.queryParams("recipe_id"));
+      String instructions = request.queryParams("instructions");
+      Recipe recipe = Recipe.find(recipeId);
+      recipe.editInstructions(instructions);
+      response.redirect("/recipes/" + recipeId + "/edit");
+      return null;
+    });
     //
     // get("/tasks", (request, response) -> {
     //   HashMap<String, Object> model = new HashMap<String, Object>();
