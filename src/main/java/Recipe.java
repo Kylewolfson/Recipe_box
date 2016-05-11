@@ -125,4 +125,16 @@ public class Recipe {
     }
   }
 
+  public void addIngredient(Ingredient ingredient) {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO recipes_ingredients (ingredients_id, recipes_id) VALUES (:ingredients_id, :recipes_id)";
+        con.createQuery(sql)
+        .addParameter("recipes_id", this.getId())
+        .addParameter("ingredients_id", ingredient.getId())
+        .executeUpdate();
+    }
+  }
+
+
+
 }
