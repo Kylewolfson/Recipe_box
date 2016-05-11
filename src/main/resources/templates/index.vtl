@@ -1,4 +1,12 @@
-<h1>Do all the things!</h1>
+<h1>Recipes!</h1>
 
-<h3><a href="/categories">Categories</a></h3>
-<h3><a href="/tasks">Tasks</a></h3>
+<ul>
+  #foreach ($tag in $tags)
+   <li><a href="/tags/$tag.getId()">$tag.getTag()</a></li>
+  #end
+</ul>
+
+
+<h3><a href="/recipes">Recipes</a></h3>
+
+<h3><a href="/ingredients">Ingredients</a></h3>
