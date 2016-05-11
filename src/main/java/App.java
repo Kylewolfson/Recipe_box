@@ -33,15 +33,15 @@ public class App {
       return null;
     });
 
-    // get("/categories/:id", (request,response) ->{
-    //   HashMap<String, Object> model = new HashMap<String, Object>();
-    //   Category category = Category.find(Integer.parseInt(request.params("id")));
-    //   model.put("category", category);
-    //   model.put("allTasks", Task.all());
-    //   model.put("template", "templates/category.vtl");
-    //   return new ModelAndView(model, layout);
-    // }, new VelocityTemplateEngine());
-    //
+    get("/recipes/:id", (request,response) ->{
+      Map<String, Object> model = new HashMap<String, Object>();
+      Recipe recipe = Recipe.find(Integer.parseInt(request.params("id")));
+      model.put("recipe", recipe);
+      model.put("allTags", Tag.all());
+      model.put("template", "templates/recipe.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
     // post("/add_categories", (request, response) -> {
     //   int taskId = Integer.parseInt(request.queryParams("task_id"));
     //   int categoryId = Integer.parseInt(request.queryParams("category_id"));
