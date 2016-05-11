@@ -13,14 +13,14 @@ public class RecipeTest {
 
   @Test
   public void Recipe_instantiatesCorrectly_true() {
-    Recipe myRecipe = new Recipe("Snow Crash");
+    Recipe myRecipe = new Recipe("Snow Peas");
     assertEquals(true, myRecipe instanceof Recipe);
   }
 
   @Test
   public void getName_recipeInstantiatesWithName_String() {
-    Recipe myRecipe = new Recipe("Goodnight Moon");
-    assertEquals("Goodnight Moon", myRecipe.getName());
+    Recipe myRecipe = new Recipe("Moon Pie");
+    assertEquals("Moon Pie", myRecipe.getName());
   }
 
   @Test
@@ -31,7 +31,7 @@ public class RecipeTest {
 
   @Test
   public void save_assignsIdToObject() {
-    Recipe myRecipe = new Recipe("Snow Crash");
+    Recipe myRecipe = new Recipe("Snow Peas");
     myRecipe.save();
     Recipe savedRecipe = Recipe.all().get(0);
     assertEquals(myRecipe.getId(), savedRecipe.getId());
@@ -39,7 +39,7 @@ public class RecipeTest {
 
   @Test
   public void find_findsRecipeInDatabase_true() {
-    Recipe myRecipe = new Recipe("Snow Crash");
+    Recipe myRecipe = new Recipe("Snow Peas");
     myRecipe.save();
     Recipe savedRecipe = Recipe.find(myRecipe.getId());
     assertTrue(myRecipe.equals(savedRecipe));
@@ -47,9 +47,9 @@ public class RecipeTest {
 
   @Test
   public void addTag_addTagToRecipe() {
-    Tag myTag = new Tag("Neal Stephenson");
+    Tag myTag = new Tag("Mexican");
     myTag.save();
-    Recipe myRecipe = new Recipe("Mow the lawn for Dummies");
+    Recipe myRecipe = new Recipe("Enchiladas");
     myRecipe.save();
     myRecipe.addTag(myTag);
     Tag savedTag = myRecipe.getTags().get(0);
@@ -58,11 +58,11 @@ public class RecipeTest {
 
   @Test
   public void getTags_returnsAllTags_List() {
-    Tag myTag = new Tag("Neal Stephenson");
+    Tag myTag = new Tag("Mexican");
     myTag.save();
-    Tag yourTag = new Tag("Stephen King");
+    Tag yourTag = new Tag("Russian");
     myTag.save();
-    Recipe myRecipe = new Recipe("Snow Crash");
+    Recipe myRecipe = new Recipe("Snow Peas");
     myRecipe.save();
     myRecipe.addTag(myTag);
     myRecipe.addTag(yourTag);
@@ -72,9 +72,9 @@ public class RecipeTest {
 
   @Test
   public void delete_deletesAllRecipesAndTagsAssociations() {
-    Tag myTag = new Tag("Neal Stephenson");
+    Tag myTag = new Tag("Chinese");
     myTag.save();
-    Recipe myRecipe = new Recipe("Snow Crash");
+    Recipe myRecipe = new Recipe("Snow Peas");
     myRecipe.save();
     myRecipe.addTag(myTag);
     myRecipe.delete();
@@ -83,43 +83,55 @@ public class RecipeTest {
 
   @Test
   public void findByName_returnsARecipeByName_true() {
-    Recipe myRecipe = new Recipe("Snow Crash");
+    Recipe myRecipe = new Recipe("Snow Peas");
     myRecipe.save();
     myRecipe.save();
-    assertEquals(Recipe.findByName("Snow Crash").get(1), myRecipe);
+    assertEquals(Recipe.findByName("Snow Peas").get(1), myRecipe);
   }
   @Test
   public void findByName_returnsARecipeByNameAndNothingElse_true() {
-    Recipe myRecipe = new Recipe("Snow Crash");
+    Recipe myRecipe = new Recipe("Snow Peas");
     myRecipe.save();
-    Recipe yourRecipe = new Recipe("Goodnight Moon");
+    Recipe yourRecipe = new Recipe("Moon Pie");
     yourRecipe.save();
-    assertEquals(Recipe.findByName("Goodnight Moon").get(0), yourRecipe);
+    assertEquals(Recipe.findByName("Moon Pie").get(0), yourRecipe);
   }
   @Test
   public void findByTag_returnsARecipeByTagAndNothingElse_true() {
-    Recipe myRecipe = new Recipe("Snow Crash");
+    Recipe myRecipe = new Recipe("Snow Peas");
     myRecipe.save();
-    Tag myTag = new Tag("Neal Stephenson");
+    Tag myTag = new Tag("Mexican");
     myTag.save();
     myRecipe.addTag(myTag);
-    Recipe yourRecipe = new Recipe("Goodnight Moon");
+    Recipe yourRecipe = new Recipe("Moon Pie");
     yourRecipe.save();
-    Tag yourTag = new Tag("Shakespeare");
+    Tag yourTag = new Tag("Dessert");
     yourTag.save();
     yourRecipe.addTag(yourTag);
     assertEquals(Recipe.findByTag(yourTag).get(0), yourRecipe);
   }
   @Test
   public void findByTag_returnsARecipeByTagWithMultipleTags() {
-    Recipe myRecipe = new Recipe("Snow Crash");
+    Recipe myRecipe = new Recipe("Borscht");
     myRecipe.save();
-    Tag myTag = new Tag("Neal Stephenson");
+    Tag myTag = new Tag("Lithuanian");
     myTag.save();
     myRecipe.addTag(myTag);
-    Tag yourTag = new Tag("Shakespeare");
+    Tag yourTag = new Tag("Soup");
     yourTag.save();
     myRecipe.addTag(yourTag);
     assertEquals(Recipe.findByTag(myTag).get(0), myRecipe);
   }
+
+  @Test
+  public void addIngredient_addsIngredientsToRecipe_True() {
+    Recipe myRecipe = new Recipe("Baked Potatoes");
+    myRecipe.save();
+    Ingredient myIngredient = new Ingredient("Potatoes");
+    myIngredient.save();
+    myRecipe.addIngredient(myIngredient);
+    Ingredient savedIngredient = myRecipe.getIngredients().get(0);
+    assertTrue(myIngredient.equals(savedIngredient));
+  }
+
 }
