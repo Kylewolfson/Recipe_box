@@ -9,6 +9,8 @@ public class Recipe {
   private int tags_id;
   private int rating;
   private String instructions;
+  private String measurement;
+  private double quantity;
 
   public Recipe(String name) {
     this.name = name;
@@ -125,16 +127,55 @@ public class Recipe {
     }
   }
 
-  public void addIngredient(Ingredient ingredient) {
+  public void addIngredient(Ingredient ingredient, double quantity, String measure) {
     try (Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO recipes_ingredients (ingredients_id, recipes_id) VALUES (:ingredients_id, :recipes_id)";
+      String sql = "INSERT INTO recipes_ingredients (ingredients_id, recipes_id, quantity, measurement) VALUES (:ingredients_id, :recipes_id, :quantity, :measurement)";
         con.createQuery(sql)
         .addParameter("recipes_id", this.getId())
         .addParameter("ingredients_id", ingredient.getId())
+        .addParameter("quantity", quantity)
+        .addParameter("measurement", measurement)
         .executeUpdate();
     }
   }
 
+  public List<Ingredient> getIngredients() {
+    try(Connection con = DB.sql2o.open()) {
+      String joinQuery = "SELECT ingredients_id FROM recipes_ingredients WHERE recipes_id = :recipes_id;";
 
+      List<Integer> ingredientIds = con.createQuery(joinQuery)
+        .addParameter("recipes_id", this.getId())
+        .executeAndFetch(Integer.class);
 
+      List<Ingredient> ingredients = new ArrayList<Ingredient>();
+
+      for (Integer ingredientId : ingredientIds) {
+        String ingredientQuery = "SELECT * FROM ingredients WHERE id = :ingredientId;";
+        Ingredient ingredient = con.createQuery(ingredientQuery)
+          .addParameter("ingredientId", ingredientId)
+          .executeAndFetchFirst(Ingredient.class);
+        ingredients.add(ingredient);
+      }
+      return ingredients;
+    }
+  }
+
+  public void editInstructions(String instructions) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE recipes SET instructions = :instructions WHERE id = :id;";
+      con.createQuery(sql)
+      .addParameter("id", this.id)
+      .addParameter("instructions", instructions)
+      .executeUpdate();
+    }
+  }
+
+  public String getInstructions() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT instructions From recipes WHERE id = :id;";
+      return con.createQuery(sql)
+      .addParameter("id", this.id)
+      .executeAndFetchFirst(String.class);
+    }
+  }
 }

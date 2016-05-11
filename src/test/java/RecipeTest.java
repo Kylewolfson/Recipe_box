@@ -129,9 +129,17 @@ public class RecipeTest {
     myRecipe.save();
     Ingredient myIngredient = new Ingredient("Potatoes");
     myIngredient.save();
-    myRecipe.addIngredient(myIngredient);
+    myRecipe.addIngredient(myIngredient, 2, "Tablespoons");
     Ingredient savedIngredient = myRecipe.getIngredients().get(0);
     assertTrue(myIngredient.equals(savedIngredient));
+  }
+
+  @Test
+  public void getInstructions_returnsInstructions_String() {
+    Recipe myRecipe = new Recipe("Baked Potatoes");
+    myRecipe.save();
+    myRecipe.editInstructions("Apply fire to potato");
+    assertEquals("Apply fire to potato", myRecipe.getInstructions());
   }
 
 }
