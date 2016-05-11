@@ -42,6 +42,13 @@
       <option value="$ingredient.getId()"> $ingredient.getFixins() </option>
     #end
   </select>
+  <label for="quantity">Quantity of ingredient</label>
+  <input id="quantity" name="quantity" type="Number" step="0.01" min="0">
+  <label for="measurement">Type of measurement (cup, ounce, etc.)</label>
+  <input id="measurement" name="measurement" type="text">
+  <br>
+  <br>
+
   <button type="submit" class="btn btn-default">Add an ingredient to this recipe</button>
 </form>
 

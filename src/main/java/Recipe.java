@@ -127,7 +127,7 @@ public class Recipe {
     }
   }
 
-  public void addIngredient(Ingredient ingredient, double quantity, String measure) {
+  public void addIngredient(Ingredient ingredient, double quantity, String measurement) {
     try (Connection con = DB.sql2o.open()) {
       String sql = "INSERT INTO recipes_ingredients (ingredients_id, recipes_id, quantity, measurement) VALUES (:ingredients_id, :recipes_id, :quantity, :measurement)";
         con.createQuery(sql)

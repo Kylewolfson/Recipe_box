@@ -69,6 +69,18 @@ public class App {
       response.redirect("/recipes/" + recipeId + "/edit");
       return null;
     });
+
+    post("/add_ingredient", (request, response) -> {
+      int recipeId = Integer.parseInt(request.queryParams("recipe_id"));
+      Integer ingredientId = Integer.parseInt(request.queryParams("ingredient_id"));
+      Ingredient ingredient = Ingredient.find(ingredientId);
+      String measurementType = request.queryParams("measurement");
+      double quantity = Double.parseDouble(request.queryParams("quantity"));
+      Recipe recipe = Recipe.find(recipeId);
+      recipe.addIngredient(ingredient, quantity, measurementType);
+      response.redirect("/recipes/" + recipeId + "/edit");
+      return null;
+    });
     //
     // get("/tasks", (request, response) -> {
     //   HashMap<String, Object> model = new HashMap<String, Object>();
