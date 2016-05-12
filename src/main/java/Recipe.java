@@ -160,6 +160,38 @@ public class Recipe {
     }
   }
 
+  public List<IngredientAndQuantity> getIngredientsAndQuantity() {
+    try(Connection con = DB.sql2o.open()) {
+      String joinQuery = "SELECT ingredients_id FROM recipes_ingredients WHERE recipes_id = :recipes_id;";
+
+      List<Integer> ingredientIds = con.createQuery(joinQuery)
+        .addParameter("recipes_id", this.getId())
+        .executeAndFetch(Integer.class);
+
+      List<IngredientAndQuantity> ingredientsAndQuantity = new ArrayList<IngredientAndQuantity>();
+
+      for (Integer ingredientId : ingredientIds) {
+        String ingredientNameQuery = "SELECT fixins FROM ingredients WHERE id = :ingredientId;";
+        String ingredient = con.createQuery(ingredientNameQuery)
+          .addParameter("ingredientId", ingredientId)
+          .executeAndFetchFirst(String.class);
+        String ingredientQuantityQuery = "SELECT quantity FROM recipes_ingredients WHERE ingredients_id = :ingredientId AND recipes_id = :recipes_id;";
+        Double quantity = con.createQuery(ingredientQuantityQuery)
+          .addParameter("ingredientId", ingredientId)
+          .addParameter("recipes_id", this.getId())
+          .executeAndFetchFirst(Double.class);
+        String ingredientMeasurementQuery = "SELECT measurement FROM recipes_ingredients WHERE ingredients_id = :ingredientId AND recipes_id = :recipes_id;";
+        String measurement = con.createQuery(ingredientMeasurementQuery)
+          .addParameter("ingredientId", ingredientId)
+          .addParameter("recipes_id", this.getId())
+          .executeAndFetchFirst(String.class);
+        IngredientAndQuantity ingredientAndQuantity = new IngredientAndQuantity(ingredient, quantity, measurement);
+        ingredientsAndQuantity.add(ingredientAndQuantity);
+      }
+      return ingredientsAndQuantity;
+    }
+  }
+
   public void editInstructions(String instructions) {
     try(Connection con = DB.sql2o.open()) {
       String sql = "UPDATE recipes SET instructions = :instructions WHERE id = :id;";

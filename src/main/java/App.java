@@ -47,6 +47,7 @@ public class App {
       model.put("recipe", recipe);
       model.put("allTags", Tag.all());
       model.put("allIngredients", Ingredient.all());
+      model.put("ingredientsAndQuantity", recipe.getIngredientsAndQuantity());
       model.put("template", "templates/recipe-edit.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());

@@ -1,5 +1,13 @@
 <h1>$recipe.getName()</h1>
 
+
+<ul>
+  #foreach($ingredientAndQuantity in $recipe.getIngredientsAndQuantity())
+    <li>$ingredientAndQuantity.getQuantity() $ingredientAndQuantity.getMeasurement() of $ingredientAndQuantity.getFixins()</li>
+  #end
+</ul>
+
+
 #if($recipe.getInstructions())
 <h5>$recipe.getInstructions()</h5>
 #end
