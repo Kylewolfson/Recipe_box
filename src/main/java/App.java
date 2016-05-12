@@ -37,6 +37,8 @@ public class App {
       Map<String, Object> model = new HashMap<String, Object>();
       Recipe recipe = Recipe.find(Integer.parseInt(request.params("id")));
       model.put("recipe", recipe);
+      model.put("allTags", Tag.all());
+      model.put("ingredientsAndQuantity", recipe.getIngredientsAndQuantity());
       model.put("template", "templates/recipe.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -99,24 +101,25 @@ public class App {
     //   return null;
     // });
     //
-    // get("/tasks/:id", (request, response) -> {
-    //   HashMap<String, Object> model = new HashMap<String, Object>();
-    //   Task task = Task.find(Integer.parseInt(request.params("id")));
-    //   model.put("task", task);
-    //   model.put("allCategories", Category.all());
-    //   model.put("template", "templates/task.vtl");
-    //   return new ModelAndView(model, layout);
-    // }, new VelocityTemplateEngine());
-    //
-    // post("/add_tasks", (request, response) -> {
-    //   int taskId = Integer.parseInt(request.queryParams("task_id"));
-    //   int categoryId = Integer.parseInt(request.queryParams("category_id"));
-    //   Category category = Category.find(categoryId);
-    //   Task task = Task.find(taskId);
-    //   category.addTask(task);
-    //   response.redirect("/categories/" + categoryId);
-    //   return null;
-    // });
+    get("/tags/:id", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      Tag tag = Tag.find(Integer.parseInt(request.params("id")));
+      model.put("tag", tag);
+      model.put("recipes", Recipe.findByTag(tag));
+      model.put("allRecipes", Recipe.all());
+      model.put("template", "templates/tag.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/add_recipes", (request, response) -> {
+      int recipeId = Integer.parseInt(request.queryParams("recipe_id"));
+      int tagId = Integer.parseInt(request.queryParams("tag_id"));
+      Tag tag = Tag.find(tagId);
+      Recipe recipe = Recipe.find(recipeId);
+      tag.addRecipe(recipe);
+      response.redirect("/tags/" + tagId);
+      return null;
+    });
 
   }
 }

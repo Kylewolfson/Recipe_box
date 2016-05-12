@@ -1,5 +1,17 @@
 <h1>$recipe.getName()</h1>
 
+
+<ul>
+  #foreach($ingredientAndQuantity in $recipe.getIngredientsAndQuantity())
+    <li>$ingredientAndQuantity.getQuantity() $ingredientAndQuantity.getMeasurement() of $ingredientAndQuantity.getFixins()</li>
+  #end
+</ul>
+
+
+#if($recipe.getInstructions())
+<h5>$recipe.getInstructions()</h5>
+#end
+
 #if($recipe.getTags())
   <p>Here are the tags for this recipe:</p>
   <ul>
@@ -8,6 +20,8 @@
     #end
   </ul>
 #end
+
+<br>
 
 <p><a href="/recipes/$recipe.getId()/edit">Edit this recipe</a></p>
 
