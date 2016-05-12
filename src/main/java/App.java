@@ -137,5 +137,13 @@ public class App {
       return null;
     });
 
+    get("/ingredients/:id", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      Ingredient ingredient = Ingredient.find(Integer.parseInt(request.params("id")));
+      model.put("ingredient", ingredient);
+      model.put("template", "templates/ingredient.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
   }
 }

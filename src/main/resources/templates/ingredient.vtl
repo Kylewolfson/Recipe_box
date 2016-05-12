@@ -1,0 +1,12 @@
+<h1>Recipes containing $ingredient.getFixins()</h1>
+
+#if($ingredient.getRecipes())
+  <p>Here are the recipes using this ingredient:</p>
+  <ul>
+    #foreach($recipe in $ingredient.getRecipes())
+       <li><a href="/recipes/$recipe.getId()">$recipe.getName()</a></li>
+    #end
+  </ul>
+#end
+
+<p><a href="/">Home</a></p>
