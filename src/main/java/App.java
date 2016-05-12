@@ -84,23 +84,23 @@ public class App {
       response.redirect("/recipes/" + recipeId + "/edit");
       return null;
     });
-    //
-    // get("/tasks", (request, response) -> {
-    //   HashMap<String, Object> model = new HashMap<String, Object>();
-    //   model.put("tasks", Task.all());
-    //   model.put("template", "templates/tasks.vtl");
-    //   return new ModelAndView(model, layout);
-    // }, new VelocityTemplateEngine());
-    //
-    // post("/tasks", (request, response) -> {
-    //   HashMap<String, Object> model = new HashMap<String, Object>();
-    //   String description = request.queryParams("description");
-    //   Task newTask = new Task(description);
-    //   newTask.save();
-    //   response.redirect("/tasks");
-    //   return null;
-    // });
-    //
+
+    get("new_tag", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      model.put("allTags", Tag.all());
+      model.put("template", "templates/new_tag.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/new_tag", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      String name = request.queryParams("name");
+      Tag newTag = new Tag(name);
+      newTag.save();
+      response.redirect("/new_tag");
+      return null;
+    });
+
     get("/tags/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Tag tag = Tag.find(Integer.parseInt(request.params("id")));
@@ -118,6 +118,22 @@ public class App {
       Recipe recipe = Recipe.find(recipeId);
       tag.addRecipe(recipe);
       response.redirect("/tags/" + tagId);
+      return null;
+    });
+
+    get("/ingredients", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      model.put("allIngredients", Ingredient.all());
+      model.put("template", "templates/ingredients.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/add_new_ingredient", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      String fixins = request.queryParams("fixins");
+      Ingredient newIngredient = new Ingredient(fixins);
+      newIngredient.save();
+      response.redirect("/ingredients");
       return null;
     });
 

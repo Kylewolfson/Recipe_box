@@ -3,7 +3,7 @@
 #if($tag.getRecipes())
   <ul>
     #foreach($recipe in $tag.getRecipes())
-      <li>$recipe.getName()</li>
+   <li><a href="/recipes/$recipe.getId()">$recipe.getName()</a></li>
     #end
   </ul>
 #end
@@ -21,6 +21,6 @@
   <button type="submit" class="btn btn-success">Add recipe to this tag</button>
 </form>
 
-<p><a href="/tags/$tag.getId()/edit">Edit this tag</a></p>
+<!-- <p><a href="/tags/$tag.getId()/edit">Edit this tag</a></p> -->
 
 <p><a href="/">Home</a></p>

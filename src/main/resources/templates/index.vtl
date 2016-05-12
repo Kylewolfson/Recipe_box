@@ -1,12 +1,15 @@
 <h1>Recipes!</h1>
 
+<h2> List recipes by tag:</h2>
 <ul>
   #foreach ($tag in $tags)
    <li><a href="/tags/$tag.getId()">$tag.getTag()</a></li>
   #end
 </ul>
 
+<h5><a href="/new_tag">Add a new tag</a></h5>
 
+<br>
 <h3><a href="/recipes">Recipes</a></h3>
 
 <h3><a href="/ingredients">Ingredients</a></h3>

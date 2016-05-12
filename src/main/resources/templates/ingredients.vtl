@@ -1,0 +1,17 @@
+<h1>All ingredients</h1>
+<ul>
+  #foreach ($ingredient in $allIngredients)
+    <li><a href="/ingredients/$ingredient.getId()">$ingredient.getFixins()</a></li>
+  #end
+</ul>
+
+<p>Add a new ingredient:</p>
+
+<form action="/add_new_ingredient" method="post">
+  <label for="fixins">Ingredient</label>
+  <input id="fixins" name="fixins" type="text">
+
+  <button type="submit" class="btn btn-default">Add ingredient</button>
+</form>
+
+<p><a href="/">Home</a></p>
